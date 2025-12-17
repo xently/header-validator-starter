@@ -1,4 +1,4 @@
-# KCB Header Validator Starter
+# Header Validator Starter
 
 ## Overview
 
@@ -33,8 +33,7 @@ Modules in this repo are separate Maven projects:
 - Error handling: Invalid or missing headers are collected; a 400 Bad Request is returned with a standardised body
   (fields such as `messageCode=4000453`, `statusDescription=Failed`, and one error per offending header).
 - Filters:
-    - `KCBRequestFilter` creates a request-scoped context with a conversation ID.
-    - `KCBResponseFilter` optionally sets `X-ElapsedTime` based on the request `X-TimeStamp` header.
+    - `RequestContextFilter` creates a request-scoped context with a conversation ID.
 
 ## Requirements
 
@@ -66,7 +65,7 @@ Modules in this repo are separate Maven projects:
 
    ```xml
    <dependency>
-     <groupId>com.kcbgroup</groupId>
+     <groupId>co.ke.xently</groupId>
      <artifactId>header-validator-starter-web</artifactId>
      <version>1.0.0</version>
    </dependency>
@@ -76,7 +75,7 @@ Modules in this repo are separate Maven projects:
 
    ```xml
    <dependency>
-     <groupId>com.kcbgroup</groupId>
+     <groupId>co.ke.xently</groupId>
      <artifactId>header-validator-starter-webflux</artifactId>
      <version>1.0.0</version>
    </dependency>
@@ -112,15 +111,15 @@ Modules in this repo are separate Maven projects:
 
 Both starters expose the following configuration properties (Spring Boot relaxed binding applies):
 
-- `kcb.api.headers.validation.headers` — a list of header rules. Each rule supports:
+- `xently.api.headers.validation.headers` — a list of header rules. Each rule supports:
     - `header-name` (string, required): The HTTP header name.
     - `required` (boolean, default true): Whether the header must be present and non-empty.
     - `validator` (string, optional): A `HeaderValidator` implementation. The value can be:
         - a fully qualified class name (FQCN) with a public no-arg constructor, or
         - a Spring bean name of a `HeaderValidator`.
-          The lookup order is controlled by `kcb.api.headers.validator.source` (see below).
+          The lookup order is controlled by `xently.api.headers.validator.source` (see below).
 
-- `kcb.api.headers.validator.source` — optional, enum controlling how validator strings are resolved:
+- `xently.api.headers.validator.source` — optional, enum controlling how validator strings are resolved:
     - `FQCN` — use FQCN only
     - `BeanDefinition` — use Spring bean name only
     - `FQCNB4BeanDefinition` — try FQCN, then fall back to bean name (default)
@@ -158,7 +157,7 @@ Example: adding/overriding headers (demo-web; for WebFlux, bean/package names wi
 #### YAML
 
 ```yaml
-kcb:
+xently:
   api:
     headers:
       validator:
@@ -173,32 +172,32 @@ kcb:
             validator: CustomValidator # Spring bean name
           - header-name: X-Timestamp # Override the default X-TimeStamp header to accept ISO-8601 instead
             required: false
-            validator: com.kcbgroup.demoweb.validators.ISO8601TimestampHeaderValidator
+            validator: co.ke.xently.demoweb.validators.ISO8601TimestampHeaderValidator
 ```
 
 #### Properties
 
 ```properties
-kcb.api.headers.validator.source=beandefinitionb4fqcn
-kcb.api.headers.validation.headers.[0].header-name=X-Additional-Required
-kcb.api.headers.validation.headers.[1].header-name=X-Additional-Optional
-kcb.api.headers.validation.headers.[1].required=false
-kcb.api.headers.validation.headers.[2].header-name=X-Additional-Custom-Validator
-kcb.api.headers.validation.headers.[2].required=false
+xently.api.headers.validator.source=beandefinitionb4fqcn
+xently.api.headers.validation.headers.[0].header-name=X-Additional-Required
+xently.api.headers.validation.headers.[1].header-name=X-Additional-Optional
+xently.api.headers.validation.headers.[1].required=false
+xently.api.headers.validation.headers.[2].header-name=X-Additional-Custom-Validator
+xently.api.headers.validation.headers.[2].required=false
 # Spring bean name
-kcb.api.headers.validation.headers.[2].validator=CustomValidator
+xently.api.headers.validation.headers.[2].validator=CustomValidator
 # Override the default X-TimeStamp header to accept ISO-8601 instead
-kcb.api.headers.validation.headers.[3].header-name=X-Timestamp
-kcb.api.headers.validation.headers.[3].required=false
-kcb.api.headers.validation.headers.[3].validator=com.kcbgroup.demoweb.validators.ISO8601TimestampHeaderValidator
+xently.api.headers.validation.headers.[3].header-name=X-Timestamp
+xently.api.headers.validation.headers.[3].required=false
+xently.api.headers.validation.headers.[3].validator=validators.co.ke.xently.demoweb.ISO8601TimestampHeaderValidator
 ```
 
 #### Environment variables
 
 All properties can be supplied via environment variables using Spring Boot’s relaxed binding rules. Examples:
 
-- `kcb.api.headers.validator.source` → `KCB_API_HEADERS_VALIDATION_VALIDATOR_SOURCE`
-- `kcb.api.headers.validation.headers.[0].header-name` → `KCB_API_HEADERS_VALIDATION_HEADERS_0__HEADER_NAME`
+- `xently.api.headers.validator.source` → `XENTLY_API_HEADERS_VALIDATION_VALIDATOR_SOURCE`
+- `xently.api.headers.validation.headers.[0].header-name` → `XENTLY_API_HEADERS_VALIDATION_HEADERS_0__HEADER_NAME`
 
 Note the conversion rules: dots to underscores, list indexes like `[0]` to `_0_` (often written as `0__` to separate
 levels), and kebab-case keys to upper snake case.
@@ -206,7 +205,7 @@ levels), and kebab-case keys to upper snake case.
 ### Custom validators
 
 Implement the [
-`HeaderValidator`](header-validator-common/src/main/java/com/kcbgroup/common/headers/validators/HeaderValidator.java)
+`HeaderValidator`](header-validator-common/src/main/java/co/ke/xently/common/headers/validators/HeaderValidator.java)
 interface.
 
 You can provide validators by:
@@ -217,7 +216,7 @@ You can provide validators by:
 ## Payload conversion and error response customisation
 
 The starters expose a simple extension point via the [
-`PayloadConverter`](header-validator-common/src/main/java/com/kcbgroup/common/utils/converter/PayloadConverter.java)
+`PayloadConverter`](header-validator-common/src/main/java/co/ke/xently/common/utils/converter/PayloadConverter.java)
 interface to help you:
 
 - Customise the body returned when header validation fails.
@@ -231,10 +230,10 @@ created with `@ConditionalOnMissingBean`, your bean will take precedence automat
 Minimal example (works for both MVC and WebFlux apps):
 
 ```java
-import com.kcbgroup.common.headers.exceptions.HeadersValidationException;
-import com.kcbgroup.common.utils.converter.PayloadConverter;
-import com.kcbgroup.common.utils.dto.Request;
-import com.kcbgroup.common.utils.dto.ResponsePayload;
+import co.ke.xently.common.headers.exceptions.HeadersValidationException;
+import co.ke.xently.common.utils.converter.PayloadConverter;
+import co.ke.xently.common.utils.dto.Request;
+import co.ke.xently.common.utils.dto.ResponsePayload;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.lang.NonNull;

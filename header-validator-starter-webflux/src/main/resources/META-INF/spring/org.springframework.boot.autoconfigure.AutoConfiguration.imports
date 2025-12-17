@@ -1,2 +1,2 @@
-com.kcbgroup.common.headers.HeaderValidationConfiguration
-com.kcbgroup.common.RequestPayloadConverterConfiguration
+co.ke.xently.common.headers.HeaderValidationConfiguration
+co.ke.xently.common.RequestPayloadConverterConfiguration

@@ -9,10 +9,10 @@
         <relativePath/>
     </parent>
 
-    <groupId>com.kcbgroup</groupId>
+    <groupId>co.ke.xently</groupId>
     <artifactId>header-validator-starter</artifactId>
     <version>1.0.0</version>
-    <name>KCB header validator starter</name>
+    <name>Header validator starter</name>
     <packaging>pom</packaging>
 
     <properties>
