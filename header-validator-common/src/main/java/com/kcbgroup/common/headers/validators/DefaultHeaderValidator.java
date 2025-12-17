@@ -1,0 +1,16 @@
+package com.kcbgroup.common.headers.validators;
+
+import org.springframework.lang.NonNull;
+import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
+
+@Component
+public record DefaultHeaderValidator() implements HeaderValidator {
+    @Override
+    @NonNull
+    public ValidationResult validate(@NonNull String headerName, @NonNull String headerValue) {
+        return StringUtils.hasText(headerValue)
+                ? new ValidationResult.Success()
+                : new ValidationResult.Failure("Header value is required");
+    }
+}

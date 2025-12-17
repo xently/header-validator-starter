@@ -1,0 +1,99 @@
+# group: Header validator test
+# @name Hello [GET]
+@baseUrl = http://localhost:8080
+@callbackUrl = https://jsonplaceholder.org/posts
+GET {{baseUrl}}/api/hello
+X-FeatureName: FN
+X-ServiceCode: SC
+X-ServiceName: SN
+X-ChannelCode: CC
+X-ChannelName: CN
+X-ChannelCategory: CC
+X-MinorServiceVersion: v1.0
+X-FeatureCode: FC # [optional] - default configuration
+X-RouteCode: RC # [optional] - default configuration
+X-TimeStamp: {{$isoTimestamp}} # [optional] - default configuration
+X-ServiceMode: SM # [optional] - default configuration
+X-SubscriberEvents: SE # [optional] - default configuration
+X-ServiceSubCategory: SSC # [optional] - default configuration
+X-CallBackURL: {{callbackUrl}} # [optional] - default configuration
+X-Additional-Required: v # uses default validator; should be non-blank
+X-Additional-Optional: x # uses default validator; should be non-blank
+X-Additional-Custom-Validator: X-Additional-Custom-Validator
+
+###
+# group: Header validator test
+# @name Hello [POST]
+POST {{baseUrl}}/api/hello
+X-FeatureName: FN
+X-ServiceCode: SC
+X-ServiceName: SN
+X-ChannelCode: CC
+X-ChannelName: CN
+X-ChannelCategory: CC
+X-MinorServiceVersion: v1.0
+X-FeatureCode: FC # [optional] - default configuration
+X-RouteCode: RC # [optional] - default configuration
+X-TimeStamp: {{$isoTimestamp}} # [optional] - default configuration
+X-ServiceMode: SM # [optional] - default configuration
+X-SubscriberEvents: SE # [optional] - default configuration
+X-ServiceSubCategory: SSC # [optional] - default configuration
+X-CallBackURL: {{callbackUrl}} # [optional] - default configuration
+X-Additional-Required: v # uses default validator; should be non-blank
+X-Additional-Optional: x # uses default validator; should be non-blank
+X-Additional-Custom-Validator: X-Additional-Custom-Validator
+Content-Type: application/json
+
+{
+  "messageID": "{{$random.alphanumeric(32)}}",
+  "primaryData": "John Doe",
+  "additionalData": [
+    {
+      "key": "",
+      "value": ""
+    }
+  ]
+}
+
+###
+# group: Header validator test
+# @name Hello [POST - Mutlipart]
+POST {{baseUrl}}/api/hello/multipart
+X-FeatureName: FN
+X-ServiceCode: SC
+X-ServiceName: SN
+X-ChannelCode: CC
+X-ChannelName: CN
+X-ChannelCategory: CC
+X-MinorServiceVersion: v1.0
+X-FeatureCode: FC # [optional] - default configuration
+X-RouteCode: RC # [optional] - default configuration
+X-TimeStamp: {{$isoTimestamp}} # [optional] - default configuration
+X-ServiceMode: SM # [optional] - default configuration
+X-SubscriberEvents: SE # [optional] - default configuration
+X-ServiceSubCategory: SSC # [optional] - default configuration
+X-CallBackURL: {{callbackUrl}} # [optional] - default configuration
+X-Additional-Required: v # uses default validator; should be non-blank
+X-Additional-Optional: x # uses default validator; should be non-blank
+X-Additional-Custom-Validator: X-Additional-Custom-Validator
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+
+--WebAppBoundary
+Content-Disposition: form-data; name="payload"
+Content-Type: application/json
+
+{
+  "messageID": "{{$random.alphanumeric(32)}}",
+  "primaryData": "John Doe",
+  "additionalData": [
+    {
+      "key": "",
+      "value": ""
+    }
+  ]
+}
+--WebAppBoundary
+Content-Disposition: form-data; name="file"; filename="README.md"
+
+< ./README.md
+--WebAppBoundary
