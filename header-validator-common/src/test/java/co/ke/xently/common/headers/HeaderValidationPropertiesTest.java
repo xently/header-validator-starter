@@ -72,7 +72,7 @@ class HeaderValidationPropertiesTest {
             runner.withPropertyValues(
                     "xently.api.headers.validation.headers.[0].header-name=X-Custom-Header",
                     "xently.api.headers.validation.headers.[0].required=true",
-                    "xently.api.headers.validation.headers.[0].validator=validators.headers.co.ke.xently.common.EpochTimestampValidator"
+                    "xently.api.headers.validation.headers.[0].validator=co.ke.xently.common.headers.validators.EpochTimestampValidator"
             ).run(context -> {
                 assertThat(context)
                         .hasSingleBean(HeaderValidationProperties.class);
