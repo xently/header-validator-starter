@@ -11,19 +11,6 @@
     <artifactId>header-validator-common</artifactId>
     <name>header-validator-common</name>
     <description>header-validator-common</description>
-    <url/>
-    <licenses>
-        <license/>
-    </licenses>
-    <developers>
-        <developer/>
-    </developers>
-    <scm>
-        <connection/>
-        <developerConnection/>
-        <tag/>
-        <url/>
-    </scm>
     <dependencies>
         <!-- Keep common module web-stack agnostic: depend only on APIs, not starters (no embedded server) -->
         <dependency>

@@ -14,19 +14,6 @@
     <properties>
         <maven.deploy.skip>false</maven.deploy.skip>
     </properties>
-    <url/>
-    <licenses>
-        <license/>
-    </licenses>
-    <developers>
-        <developer/>
-    </developers>
-    <scm>
-        <connection/>
-        <developerConnection/>
-        <tag/>
-        <url/>
-    </scm>
     <dependencies>
         <dependency>
             <groupId>co.ke.xently</groupId>
