@@ -26,4 +26,12 @@
         <module>header-validator-starter-web</module>
         <module>header-validator-starter-webflux</module>
     </modules>
+    
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>GitHub Packages</name>
+            <url>https://maven.pkg.github.com/xently/kcb-header-validator-starter</url>
+        </repository>
+    </distributionManagement>
 </project>
