@@ -11,6 +11,9 @@
     <artifactId>header-validator-starter-webflux</artifactId>
     <name>header-validator-starter-webflux</name>
     <description>header-validator-starter-webflux</description>
+    <properties>
+        <maven.deploy.skip>false</maven.deploy.skip>
+    </properties>
     <url/>
     <licenses>
         <license/>

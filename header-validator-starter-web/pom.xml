@@ -11,6 +11,9 @@
     <artifactId>header-validator-starter-web</artifactId>
     <name>header-validator-starter-web</name>
     <description>header-validator-starter-web</description>
+    <properties>
+        <maven.deploy.skip>false</maven.deploy.skip>
+    </properties>
     <url/>
     <licenses>
         <license/>
