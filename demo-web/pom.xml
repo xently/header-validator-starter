@@ -11,6 +11,9 @@
     <artifactId>demo-web</artifactId>
     <name>demo-web</name>
     <description>demo-web</description>
+    <properties>
+        <maven.deploy.skip>true</maven.deploy.skip>
+    </properties>
     <dependencies>
         <dependency>
             <groupId>ke.co.xently</groupId>

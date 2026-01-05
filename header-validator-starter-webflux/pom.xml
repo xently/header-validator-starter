@@ -11,9 +11,6 @@
     <artifactId>header-validator-starter-webflux</artifactId>
     <name>header-validator-starter-webflux</name>
     <description>header-validator-starter-webflux</description>
-    <properties>
-        <maven.deploy.skip>false</maven.deploy.skip>
-    </properties>
     <dependencies>
         <dependency>
             <groupId>ke.co.xently</groupId>
