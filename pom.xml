@@ -9,7 +9,7 @@
         <relativePath/>
     </parent>
 
-    <groupId>co.ke.xently</groupId>
+    <groupId>ke.co.xently</groupId>
     <artifactId>header-validator-starter</artifactId>
     <version>1.0.0</version>
     <name>Header validator starter</name>
