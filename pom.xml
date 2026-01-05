@@ -31,7 +31,7 @@
         <repository>
             <id>github</id>
             <name>GitHub Packages</name>
-            <url>https://maven.pkg.github.com/xently/kcb-header-validator-starter</url>
+            <url>https://maven.pkg.github.com/xently/header-validator-starter</url>
         </repository>
     </distributionManagement>
 </project>
