@@ -25,7 +25,7 @@ jobs:
         gpg-passphrase: MAVEN_GPG_PASSPHRASE
 
     - name: Build and Publish to Maven Central
-      run: mvn -B clean deploy -P release -Dgpg.passphrase=${{ secrets.GPG_PASSPHRASE }}
+      run: mvn -B clean deploy -P release -Dgpg.passphrase="$MAVEN_GPG_PASSPHRASE"
       env:
         MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
         MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
