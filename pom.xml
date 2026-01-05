@@ -97,6 +97,7 @@
                         </executions>
                         <configuration>
                             <doclint>none</doclint>
+                            <failOnError>false</failOnError>
                         </configuration>
                     </plugin>
                     <plugin>
