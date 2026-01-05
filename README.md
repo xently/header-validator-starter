@@ -20,7 +20,7 @@ Modules in this repo are separate Maven projects:
 ## Stack
 
 - **Language:** Java 21
-- **Frameworks:** Spring Boot 3.5.8 (Servlet and WebFlux)
+- **Frameworks:** Spring Boot 3.5.9 (Servlet and WebFlux)
 - **Build tool:** Maven, with Maven Wrapper (`mvnw`, `mvnw.cmd`) in root
 - **Testing:** JUnit 5, Spring Boot Test, Rest Assured (demo)
 
