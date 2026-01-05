@@ -18,14 +18,14 @@ jobs:
       with:
         java-version: '21'
         distribution: 'liberica'
-        server-id: ossrh
-        server-username: OSSRH_USERNAME
-        server-password: OSSRH_PASSWORD
+        server-id: central
+        server-username: MAVEN_CENTRAL_USERNAME
+        server-password: MAVEN_CENTRAL_PASSWORD
         gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
 
     - name: Build and Publish to Maven Central
       run: mvn -B clean deploy -P release -Dgpg.passphrase="$GPG_PASSPHRASE"
       env:
-        OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
-        OSSRH_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
+        MAVEN_CENTRAL_USERNAME: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
+        MAVEN_CENTRAL_PASSWORD: ${{ secrets.MAVEN_CENTRAL_TOKEN }}
         GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
