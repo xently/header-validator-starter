@@ -20,7 +20,6 @@ jobs:
         java-version: '21'
         distribution: 'liberica'
         cache: maven
-        overwrite-settings: true
     - name: Build with Maven
       run: mvn -B clean install
 
