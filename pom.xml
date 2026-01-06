@@ -131,6 +131,7 @@
                     <plugin>
                         <groupId>org.sonatype.central</groupId>
                         <artifactId>central-publishing-maven-plugin</artifactId>
+                        <extensions>true</extensions>
                         <!-- CRITICAL: Stops the plugin from automatically trying to publish children -->
                         <inherited>false</inherited>
                         <configuration>

@@ -68,6 +68,7 @@
                     <plugin>
                         <groupId>org.sonatype.central</groupId>
                         <artifactId>central-publishing-maven-plugin</artifactId>
+                        <extensions>true</extensions>
                         <!-- It inherits version and configuration from root pom.xml -->
                     </plugin>
                 </plugins>
