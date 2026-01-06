@@ -61,7 +61,6 @@
             <build>
                 <pluginManagement>
                     <plugins>
-                        <!-- Centralize the publishing configuration -->
                         <plugin>
                             <groupId>org.sonatype.central</groupId>
                             <artifactId>central-publishing-maven-plugin</artifactId>
