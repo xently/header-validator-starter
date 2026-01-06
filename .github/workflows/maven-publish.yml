@@ -18,7 +18,7 @@ jobs:
       with:
         java-version: '21'
         distribution: 'liberica'
-        server-id: central
+        server-id: central-portal
         server-username: MAVEN_CENTRAL_USERNAME
         server-password: MAVEN_CENTRAL_PASSWORD
         gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
