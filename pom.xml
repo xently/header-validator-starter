@@ -43,6 +43,7 @@
 
     <properties>
         <java.version>21</java.version>
+        <!-- Set to false: The Parent POM must be published for children to be valid on Maven Central -->
         <maven.deploy.skip>false</maven.deploy.skip>
     </properties>
 
@@ -58,6 +59,23 @@
         <profile>
             <id>release</id>
             <build>
+                <pluginManagement>
+                    <plugins>
+                        <!-- Centralize the publishing configuration -->
+                        <plugin>
+                            <groupId>org.sonatype.central</groupId>
+                            <artifactId>central-publishing-maven-plugin</artifactId>
+                            <version>0.9.0</version>
+                            <extensions>true</extensions>
+                            <configuration>
+                                <publishingServerId>central</publishingServerId>
+                                <autoPublish>true</autoPublish>
+                                <waitUntil>published</waitUntil>
+                            </configuration>
+                        </plugin>
+                    </plugins>
+                </pluginManagement>
+
                 <plugins>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
@@ -109,16 +127,14 @@
                             </execution>
                         </executions>
                     </plugin>
+                    <!-- Execute publishing for the root POM itself -->
                     <plugin>
                         <groupId>org.sonatype.central</groupId>
                         <artifactId>central-publishing-maven-plugin</artifactId>
-                        <version>0.9.0</version>
-                        <extensions>true</extensions>
+                        <!-- CRITICAL: Stops the plugin from automatically trying to publish children -->
+                        <inherited>false</inherited>
                         <configuration>
-                            <publishingServerId>central</publishingServerId>
-                            <autoPublish>true</autoPublish>
-                            <waitUntil>published</waitUntil>
-                            <skipPublishing>${maven.deploy.skip}</skipPublishing>
+                            <skipPublishing>false</skipPublishing>
                         </configuration>
                     </plugin>
                 </plugins>
