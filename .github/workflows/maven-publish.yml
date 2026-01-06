@@ -22,7 +22,6 @@ jobs:
         server-id: central-portal
         server-username: MAVEN_CENTRAL_USERNAME
         server-password: MAVEN_CENTRAL_PASSWORD
-        overwrite-settings: true
         gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
 
     - name: Build and Publish to Maven Central
