@@ -11,7 +11,7 @@
 
     <groupId>ke.co.xently</groupId>
     <artifactId>header-validator-starter</artifactId>
-    <version>1.0.0</version>
+    <version>4.1.0</version>
     <name>Header validator starter</name>
     <description>Spring Boot autoconfiguration starters that validate incoming HTTP request headers for both Spring MVC (Servlet) and Spring WebFlux applications.</description>
     <url>https://github.com/xently/header-validator-starter</url>
