@@ -65,7 +65,7 @@ Modules in this repo are separate Maven projects:
 
    ```xml
    <dependency>
-     <groupId>co.ke.xently</groupId>
+     <groupId>ke.co.xently</groupId>
      <artifactId>header-validator-starter-web</artifactId>
      <version>3.1.0</version>
    </dependency>
@@ -75,7 +75,7 @@ Modules in this repo are separate Maven projects:
 
    ```xml
    <dependency>
-     <groupId>co.ke.xently</groupId>
+     <groupId>ke.co.xently</groupId>
      <artifactId>header-validator-starter-webflux</artifactId>
      <version>3.1.0</version>
    </dependency>
