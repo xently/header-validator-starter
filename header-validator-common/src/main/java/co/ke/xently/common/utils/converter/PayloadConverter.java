@@ -3,7 +3,7 @@ package co.ke.xently.common.utils.converter;
 import co.ke.xently.common.headers.exceptions.HeadersValidationException;
 import co.ke.xently.common.utils.dto.Request;
 import co.ke.xently.common.utils.dto.ResponsePayload;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 public interface PayloadConverter {
     /**

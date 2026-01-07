@@ -1,54 +1,53 @@
 package co.ke.xently.common;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import co.ke.xently.common.utils.converter.PayloadConverter;
 import co.ke.xently.common.utils.dto.Request;
 import lombok.AllArgsConstructor;
+import org.jspecify.annotations.NonNull;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
-import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
+import org.springframework.boot.jackson.autoconfigure.JacksonAutoConfiguration;
 import org.springframework.context.annotation.Import;
+import org.springframework.core.ResolvableType;
 import org.springframework.http.HttpInputMessage;
 import org.springframework.http.MediaType;
-import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.HttpMessageConverters;
 import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.lang.NonNull;
+import org.springframework.http.converter.json.JacksonJsonHttpMessageConverter;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import tools.jackson.databind.json.JsonMapper;
 
 import java.io.IOException;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @AutoConfiguration
 @AllArgsConstructor
-@ConditionalOnClass(ObjectMapper.class)
+@ConditionalOnClass(JsonMapper.class)
 @AutoConfigureAfter(JacksonAutoConfiguration.class)
 @Import({RequestContextFilter.class, HeaderValidatorExceptionHandler.class})
 class RequestPayloadConverterConfiguration implements WebMvcConfigurer {
-    private final ObjectMapper objectMapper;
+    private final JsonMapper objectMapper;
     private final PayloadConverter payloadConverter;
 
     @Override
-    public void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
-        converters.addFirst(new RequestPayloadJacksonConverter(objectMapper, payloadConverter));
+    public void configureMessageConverters(HttpMessageConverters.ServerBuilder builder) {
+        builder.addCustomConverter(new RequestPayloadJacksonConverter(objectMapper, payloadConverter));
     }
 
-    static class RequestPayloadJacksonConverter extends MappingJackson2HttpMessageConverter {
+    static class RequestPayloadJacksonConverter extends JacksonJsonHttpMessageConverter {
         private final PayloadConverter converter;
 
-        RequestPayloadJacksonConverter(ObjectMapper mapper, PayloadConverter converter) {
+        RequestPayloadJacksonConverter(JsonMapper mapper, PayloadConverter converter) {
             super(mapper);
             this.converter = converter;
         }
 
         @NonNull
         @Override
-        public Object read(@NonNull Type type, Class<?> contextClass, @NonNull HttpInputMessage inputMessage) throws IOException, HttpMessageNotReadableException {
-            Object payload = super.read(type, contextClass, inputMessage);
+        public Object read(@NonNull ResolvableType type, @NonNull HttpInputMessage inputMessage, Map<String, Object> hints) throws IOException, HttpMessageNotReadableException {
+            Object payload = super.read(type, inputMessage, hints);
             if (converter.convertToRequestPayload(payload) instanceof Request request) {
                 var requestContext = RequestContextHolder.getContext();
                 if (requestContext == null) {
@@ -62,21 +61,12 @@ class RequestPayloadConverterConfiguration implements WebMvcConfigurer {
         }
 
         @Override
-        public boolean canRead(@NonNull Type type, Class<?> contextClass, MediaType mediaType) {
-            if (type instanceof ParameterizedType parameterizedType) {
-                return canRead(parameterizedType.getRawType(), contextClass, mediaType);
-            }
+        public boolean canRead(@NonNull ResolvableType type, MediaType mediaType) {
+            Class<?> raw = type.toClass();
 
-            Class<?> raw;
-            try {
-                raw = (Class<?>) type;
-            } catch (ClassCastException e) {
-                raw = null;
-            }
-
-            boolean isRequestPayload = raw != null && Request.class.isAssignableFrom(raw);
+            boolean isRequestPayload = Request.class.isAssignableFrom(raw);
             if (!isRequestPayload) {
-                return super.canRead(type, contextClass, mediaType);
+                return super.canRead(type, mediaType);
             }
 
             if (mediaType == null
@@ -86,7 +76,7 @@ class RequestPayloadConverterConfiguration implements WebMvcConfigurer {
                 return true;
             }
 
-            return super.canRead(type, contextClass, mediaType);
+            return super.canRead(type, mediaType);
         }
     }
 }

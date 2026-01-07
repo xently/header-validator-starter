@@ -4,7 +4,7 @@ import co.ke.xently.common.headers.validators.DefaultHeaderValidator;
 import co.ke.xently.common.headers.validators.HeaderValidator;
 import co.ke.xently.common.headers.validators.ValidationResult;
 import lombok.*;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 import java.util.Locale;
 import java.util.Objects;

@@ -3,11 +3,12 @@ package co.ke.xently.demowebflux.validators;
 
 import co.ke.xently.common.headers.validators.HeaderValidator;
 import co.ke.xently.common.headers.validators.ValidationResult;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 import java.time.Instant;
 import java.time.format.DateTimeParseException;
 
+@SuppressWarnings("unused")
 public class ISO8601TimestampHeaderValidator implements HeaderValidator {
     @Override
     @NonNull

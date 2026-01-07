@@ -7,12 +7,13 @@ import co.ke.xently.common.headers.exceptions.MissingHeaderException;
 import co.ke.xently.common.headers.validators.ValidationResult;
 import co.ke.xently.common.utils.HeaderValidationErrorResponseHandler;
 import co.ke.xently.common.utils.converter.PayloadConverter;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.autoconfigure.web.WebProperties;
 import org.springframework.boot.web.error.ErrorAttributeOptions;
-import org.springframework.boot.web.reactive.error.ErrorAttributes;
+import org.springframework.boot.webflux.error.ErrorAttributes;
 import org.springframework.context.support.StaticApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.codec.ServerCodecConfigurer;
@@ -53,17 +54,18 @@ class HeaderValidatorExceptionHandlerTest {
 
             class StubErrorAttributes implements ErrorAttributes {
                 @Override
-                public Throwable getError(ServerRequest request) {
+                public Throwable getError(@NonNull ServerRequest request) {
                     return ex;
                 }
 
+                @NonNull
                 @Override
-                public Map<String, Object> getErrorAttributes(ServerRequest request, ErrorAttributeOptions options) {
+                public Map<String, Object> getErrorAttributes(@NonNull ServerRequest request, @NonNull ErrorAttributeOptions options) {
                     return Map.of();
                 }
 
                 @Override
-                public void storeErrorInformation(Throwable error, ServerWebExchange exchange) {
+                public void storeErrorInformation(@NonNull Throwable error, @NonNull ServerWebExchange exchange) {
                 }
             }
 
@@ -92,17 +94,18 @@ class HeaderValidatorExceptionHandlerTest {
         void shouldPropagateNonHeadersExceptionsViaRoutingFunction() {
             class StubErrorAttributes implements ErrorAttributes {
                 @Override
-                public Throwable getError(ServerRequest request) {
+                public Throwable getError(@NonNull ServerRequest request) {
                     return new RuntimeException("boom");
                 }
 
+                @NonNull
                 @Override
-                public Map<String, Object> getErrorAttributes(ServerRequest request, ErrorAttributeOptions options) {
+                public Map<String, Object> getErrorAttributes(@NonNull ServerRequest request, @NonNull ErrorAttributeOptions options) {
                     return Map.of();
                 }
 
                 @Override
-                public void storeErrorInformation(Throwable error, ServerWebExchange exchange) {
+                public void storeErrorInformation(@NonNull Throwable error, @NonNull ServerWebExchange exchange) {
                 }
             }
 
