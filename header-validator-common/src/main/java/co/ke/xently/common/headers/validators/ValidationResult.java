@@ -1,7 +1,7 @@
 package co.ke.xently.common.headers.validators;
 
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 public sealed interface ValidationResult permits ValidationResult.Failure, ValidationResult.Success {
     record Success() implements ValidationResult {

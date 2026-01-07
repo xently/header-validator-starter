@@ -4,7 +4,7 @@ import co.ke.xently.common.headers.validators.HeaderValidator;
 import co.ke.xently.common.headers.validators.ValidationResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 

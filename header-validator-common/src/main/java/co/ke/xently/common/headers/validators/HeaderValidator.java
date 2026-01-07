@@ -1,6 +1,6 @@
 package co.ke.xently.common.headers.validators;
 
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 @FunctionalInterface
 public interface HeaderValidator {
