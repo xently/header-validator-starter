@@ -1,17 +1,18 @@
 package co.ke.xently.common;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import co.ke.xently.common.RequestPayloadConverterConfiguration.RequestPayloadJackson2Decoder;
+import co.ke.xently.common.RequestPayloadConverterConfiguration.RequestPayloadJacksonDecoder;
 import co.ke.xently.common.utils.converter.PayloadConverter;
 import co.ke.xently.common.utils.dto.Request;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.ResolvableType;
 import org.springframework.core.io.buffer.DefaultDataBufferFactory;
+import org.springframework.http.codec.DecoderHttpMessageReader;
 import org.springframework.http.codec.ServerCodecConfigurer;
-import org.springframework.http.codec.json.Jackson2JsonDecoder;
+import org.springframework.http.codec.json.JacksonJsonDecoder;
 import org.springframework.util.MimeType;
 import reactor.core.publisher.Mono;
+import tools.jackson.databind.json.JsonMapper;
 
 import java.util.Collections;
 
@@ -19,7 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class RequestConverterConfigurationTest {
 
-    private final ObjectMapper mapper = new ObjectMapper();
+    private final JsonMapper mapper = new JsonMapper();
     private final PayloadConverter payloadConverter = new PayloadConverter() {
     };
 
@@ -29,28 +30,28 @@ class RequestConverterConfigurationTest {
     }
 
     @Test
-    void shouldRegisterCustomJackson2Decoder() {
+    void shouldRegisterCustomJacksonDecoder() {
         var configurer = ServerCodecConfigurer.create();
         var config = new RequestPayloadConverterConfiguration(mapper, payloadConverter);
 
         config.configureHttpMessageCodecs(configurer);
 
-        Jackson2JsonDecoder decoder = configurer.getReaders().stream()
-                .filter(r -> r instanceof org.springframework.http.codec.DecoderHttpMessageReader<?> d
-                        && d.getDecoder() instanceof Jackson2JsonDecoder)
-                .map(r -> (org.springframework.http.codec.DecoderHttpMessageReader<?>) r)
-                .map(org.springframework.http.codec.DecoderHttpMessageReader::getDecoder)
-                .map(Jackson2JsonDecoder.class::cast)
+        JacksonJsonDecoder decoder = configurer.getReaders().stream()
+                .filter(r -> r instanceof DecoderHttpMessageReader<?> d
+                        && d.getDecoder() instanceof JacksonJsonDecoder)
+                .map(r -> (DecoderHttpMessageReader<?>) r)
+                .map(DecoderHttpMessageReader::getDecoder)
+                .map(JacksonJsonDecoder.class::cast)
                 .findFirst()
                 .orElse(null);
 
         assertThat(decoder)
-                .isInstanceOf(RequestPayloadJackson2Decoder.class);
+                .isInstanceOf(RequestPayloadJacksonDecoder.class);
     }
 
     @Test
     void shouldSetContextWhenDecodingRequestPayload() {
-        var decoder = new RequestPayloadJackson2Decoder(mapper, payloadConverter);
+        var decoder = new RequestPayloadJacksonDecoder(mapper, payloadConverter);
         // language=JSON
         var json = """
                 {

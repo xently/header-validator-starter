@@ -5,6 +5,8 @@ import io.restassured.config.EncoderConfig;
 import io.restassured.filter.log.RequestLoggingFilter;
 import io.restassured.filter.log.ResponseLoggingFilter;
 import io.restassured.http.ContentType;
+import io.restassured.http.Header;
+import io.restassured.http.Headers;
 import org.hamcrest.Matcher;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -14,16 +16,12 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.util.MultiValueMap;
 
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Stream;
 
 import static io.restassured.RestAssured.given;
@@ -43,17 +41,17 @@ class ApplicationTests {
                         .encodeContentTypeAs("multipart/form-data", ContentType.MULTIPART));
     }
 
-    private static Map<String, String> validHeaders() {
-        return Map.of(
-                "X-FeatureName", "Test",
-                "X-ServiceCode", "10001",
-                "X-ServiceName", "Example Service",
-                "X-MinorServiceVersion", "v1.0",
-                "X-ChannelCategory", "102",
-                "X-ChannelCode", "10",
-                "X-ChannelName", "App",
-                "X-Additional-Required", "X-Additional-Required",
-                "X-Timestamp", Instant.now().atZone(ZoneId.of("UTC")).format(DateTimeFormatter.ISO_INSTANT)
+    private static List<Header> validHeaders() {
+        return List.of(
+                new Header("X-FeatureName", "Test"),
+                new Header("X-ServiceCode", "10001"),
+                new Header("X-ServiceName", "Example Service"),
+                new Header("X-MinorServiceVersion", "v1.0"),
+                new Header("X-ChannelCategory", "102"),
+                new Header("X-ChannelCode", "10"),
+                new Header("X-ChannelName", "App"),
+                new Header("X-Additional-Required", "X-Additional-Required"),
+                new Header("X-Timestamp", Instant.now().atZone(ZoneId.of("UTC")).format(DateTimeFormatter.ISO_INSTANT))
         );
     }
 
@@ -62,19 +60,17 @@ class ApplicationTests {
     class GET {
         @Test
         void shouldRespondWith200() {
-            var headers = new HttpHeaders(
-                    MultiValueMap.fromSingleValue(
-                            Map.of(
-                                    "X-FeatureName", "Test",
-                                    "X-ServiceCode", "10001",
-                                    "X-ServiceName", "Example Service",
-                                    "X-MinorServiceVersion", "v1.0",
-                                    "X-ChannelCategory", "102",
-                                    "X-ChannelCode", "10",
-                                    "X-ChannelName", "App",
-                                    "X-Additional-Required", "X-Additional-Required",
-                                    "X-Timestamp", Instant.now().atZone(ZoneId.of("UTC")).format(DateTimeFormatter.ISO_INSTANT)
-                            )
+            var headers = new Headers(
+                    List.of(
+                            new Header("X-FeatureName", "Test"),
+                            new Header("X-ServiceCode", "10001"),
+                            new Header("X-ServiceName", "Example Service"),
+                            new Header("X-MinorServiceVersion", "v1.0"),
+                            new Header("X-ChannelCategory", "102"),
+                            new Header("X-ChannelCode", "10"),
+                            new Header("X-ChannelName", "App"),
+                            new Header("X-Additional-Required", "X-Additional-Required"),
+                            new Header("X-Timestamp", Instant.now().atZone(ZoneId.of("UTC")).format(DateTimeFormatter.ISO_INSTANT))
                     )
             );
 
@@ -96,7 +92,7 @@ class ApplicationTests {
         @ParameterizedTest
         @MethodSource
         void shouldRespondWith400(TestCase testCase) {
-            var headers = new HttpHeaders(MultiValueMap.fromSingleValue(testCase.headers()));
+            var headers = new Headers(testCase.headers());
 
             given()
                     .headers(headers)
@@ -110,10 +106,10 @@ class ApplicationTests {
         }
 
         static Stream<TestCase> shouldRespondWith400() {
-            Map<String, String> headers = new HashMap<>(
-                    Map.of(
-                            "X-MinorServiceVersion", "v1.0",
-                            "X-Additional-Required", "value"
+            List<Header> headers = new ArrayList<>(
+                    List.of(
+                            new Header("X-MinorServiceVersion", "v1.0"),
+                            new Header("X-Additional-Required", "value")
                     )
             );
             Set.of(
@@ -128,10 +124,10 @@ class ApplicationTests {
                     "X-RouteCode",
                     "X-ServiceMode",
                     "X-SubscriberEvents"
-            ).forEach(h -> headers.put(h, "  "));
+            ).forEach(h -> headers.add(new Header(h, "  ")));
             return Stream.of(
                     new TestCase(
-                            Map.of(),
+                            List.of(),
                             containsInAnyOrder(
                                     "X-FeatureName",
                                     "X-ServiceName",
@@ -160,59 +156,59 @@ class ApplicationTests {
                             )
                     ),
                     new TestCase(
-                            Map.of(
-                                    "X-FeatureName", "Test",
-                                    "X-ServiceCode", "10001",
-                                    "X-ServiceName", "Example Service",
-                                    "X-MinorServiceVersion", "v1.0",
-                                    "X-ChannelCategory", "102",
-                                    "X-ChannelCode", "10",
-                                    "X-ChannelName", "App",
-                                    "X-CallBackURL", "invalid",
-                                    "X-Additional-Required", "       "
+                            List.of(
+                                    new Header("X-FeatureName", "Test"),
+                                    new Header("X-ServiceCode", "10001"),
+                                    new Header("X-ServiceName", "Example Service"),
+                                    new Header("X-MinorServiceVersion", "v1.0"),
+                                    new Header("X-ChannelCategory", "102"),
+                                    new Header("X-ChannelCode", "10"),
+                                    new Header("X-ChannelName", "App"),
+                                    new Header("X-CallBackURL", "invalid"),
+                                    new Header("X-Additional-Required", "       ")
                             ),
                             containsInAnyOrder("X-CallBackURL", "X-Additional-Required")
                     ),
                     new TestCase(
-                            Map.of(
-                                    "X-FeatureName", "Test",
-                                    "X-ServiceCode", "10001",
-                                    "X-ServiceName", "Example Service",
-                                    "X-MinorServiceVersion", "v1.0",
-                                    "X-ChannelCategory", "102",
-                                    "X-ChannelCode", "10",
-                                    "X-ChannelName", "App",
-                                    "X-Additional-Required", "value",
-                                    "X-Additional-Optional", "  "
+                            List.of(
+                                    new Header("X-FeatureName", "Test"),
+                                    new Header("X-ServiceCode", "10001"),
+                                    new Header("X-ServiceName", "Example Service"),
+                                    new Header("X-MinorServiceVersion", "v1.0"),
+                                    new Header("X-ChannelCategory", "102"),
+                                    new Header("X-ChannelCode", "10"),
+                                    new Header("X-ChannelName", "App"),
+                                    new Header("X-Additional-Required", "value"),
+                                    new Header("X-Additional-Optional", "  ")
                             ),
                             containsInAnyOrder("X-Additional-Optional")
                     ),
                     new TestCase(
-                            Map.of(
-                                    "X-FeatureName", "Test",
-                                    "X-ServiceCode", "10001",
-                                    "X-ServiceName", "Example Service",
-                                    "X-MinorServiceVersion", "v1.0",
-                                    "X-ChannelCategory", "102",
-                                    "X-ChannelCode", "10",
-                                    "X-ChannelName", "App",
-                                    "X-Additional-Required", "value",
-                                    "X-Additional-Custom-Validator", "  "
+                            List.of(
+                                    new Header("X-FeatureName", "Test"),
+                                    new Header("X-ServiceCode", "10001"),
+                                    new Header("X-ServiceName", "Example Service"),
+                                    new Header("X-MinorServiceVersion", "v1.0"),
+                                    new Header("X-ChannelCategory", "102"),
+                                    new Header("X-ChannelCode", "10"),
+                                    new Header("X-ChannelName", "App"),
+                                    new Header("X-Additional-Required", "value"),
+                                    new Header("X-Additional-Custom-Validator", "  ")
                             ),
                             containsInAnyOrder("X-Additional-Custom-Validator")
                     ),
                     new TestCase(
-                            Map.of(
-                                    "X-FeatureName", "Test",
-                                    "X-ServiceCode", "10001",
-                                    "X-ServiceName", "Example Service",
-                                    "X-MinorServiceVersion", "v1.0",
-                                    "X-ChannelCategory", "102",
-                                    "X-ChannelCode", "10",
-                                    "X-ChannelName", "App",
-                                    "X-Additional-Required", "value",
-                                    "X-Additional-Custom-Validator", "invalid",
-                                    "X-Timestamp", String.valueOf(System.currentTimeMillis())
+                            List.of(
+                                    new Header("X-FeatureName", "Test"),
+                                    new Header("X-ServiceCode", "10001"),
+                                    new Header("X-ServiceName", "Example Service"),
+                                    new Header("X-MinorServiceVersion", "v1.0"),
+                                    new Header("X-ChannelCategory", "102"),
+                                    new Header("X-ChannelCode", "10"),
+                                    new Header("X-ChannelName", "App"),
+                                    new Header("X-Additional-Required", "value"),
+                                    new Header("X-Additional-Custom-Validator", "invalid"),
+                                    new Header("X-Timestamp", String.valueOf(System.currentTimeMillis()))
                             ),
                             containsInAnyOrder("X-Additional-Custom-Validator", "X-Timestamp")
                     )
@@ -220,7 +216,7 @@ class ApplicationTests {
         }
 
         private record TestCase(
-                Map<String, String> headers,
+                List<Header> headers,
                 Matcher<Iterable<? extends String>> expectedErrorCodes
         ) {
         }
@@ -233,7 +229,7 @@ class ApplicationTests {
         class Plain {
             @Test
             void shouldRespondWith200AndEchoMessageId() {
-                var headers = new HttpHeaders(MultiValueMap.fromSingleValue(validHeaders()));
+                var headers = new Headers(validHeaders());
                 var requestBody = Map.of(
                         "messageID", "mid-123",
                         "primaryData", "World"
@@ -271,7 +267,7 @@ class ApplicationTests {
         class Multipart {
             @Test
             void shouldRespondWith200AndEchoMessageIdForMultipart() {
-                var headers = new HttpHeaders(MultiValueMap.fromSingleValue(validHeaders()));
+                var headers = new Headers(validHeaders());
                 // language=JSON
                 var payloadJson = """
                         {
@@ -299,7 +295,7 @@ class ApplicationTests {
 
             @Test
             void shouldRespondWith400WhenFileMissing() {
-                var headers = new HttpHeaders(MultiValueMap.fromSingleValue(validHeaders()));
+                var headers = new Headers(validHeaders());
                 // language=JSON
                 var payloadJson = """
                         {

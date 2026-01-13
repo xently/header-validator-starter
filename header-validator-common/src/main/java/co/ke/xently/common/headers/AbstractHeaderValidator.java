@@ -7,7 +7,7 @@ import co.ke.xently.common.headers.exceptions.MissingHeaderException;
 import co.ke.xently.common.headers.validators.ValidationResult;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 import java.util.function.Function;
 

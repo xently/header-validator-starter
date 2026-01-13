@@ -20,7 +20,7 @@ Modules in this repo are separate Maven projects:
 ## Stack
 
 - **Language:** Java 21
-- **Frameworks:** Spring Boot 3.5.9 (Servlet and WebFlux)
+- **Frameworks:** Spring Boot 4.0.1 (Servlet and WebFlux)
 - **Build tool:** Maven, with Maven Wrapper (`mvnw`, `mvnw.cmd`) in root
 - **Testing:** JUnit 5, Spring Boot Test, Rest Assured (demo)
 
@@ -67,7 +67,7 @@ Modules in this repo are separate Maven projects:
    <dependency>
      <groupId>ke.co.xently</groupId>
      <artifactId>header-validator-starter-web</artifactId>
-     <version>3.1.0</version>
+     <version>4.1.0</version>
    </dependency>
    ```
 
@@ -77,7 +77,7 @@ Modules in this repo are separate Maven projects:
    <dependency>
      <groupId>ke.co.xently</groupId>
      <artifactId>header-validator-starter-webflux</artifactId>
-     <version>3.1.0</version>
+     <version>4.1.0</version>
    </dependency>
    ```
 
@@ -236,7 +236,7 @@ import co.ke.xently.common.utils.dto.Request;
 import co.ke.xently.common.utils.dto.ResponsePayload;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 @Configuration
 class CustomPayloadConverterConfig {

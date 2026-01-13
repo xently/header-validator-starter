@@ -1,6 +1,5 @@
 package co.ke.xently.common;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import co.ke.xently.common.RequestPayloadConverterConfiguration.RequestPayloadJacksonConverter;
 import co.ke.xently.common.utils.converter.PayloadConverter;
 import co.ke.xently.common.utils.dto.Request;
@@ -9,28 +8,31 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.springframework.core.ResolvableType;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpInputMessage;
 import org.springframework.http.MediaType;
-import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.lang.NonNull;
+import org.springframework.http.converter.HttpMessageConverters;
+import org.springframework.http.converter.json.JacksonJsonHttpMessageConverter;
+import org.jspecify.annotations.NonNull;
+import tools.jackson.databind.json.JsonMapper;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 class RequestConverterConfigurationTest {
     record RequestPayload<T>(String messageID, T payload) implements Request {}
 
-    private final ObjectMapper mapper = new ObjectMapper();
+    private final JsonMapper mapper = new JsonMapper();
     private final PayloadConverter payloadConverter = new PayloadConverter() {
     };
     private final RequestPayloadJacksonConverter converter = new RequestPayloadJacksonConverter(mapper, payloadConverter);
@@ -41,17 +43,13 @@ class RequestConverterConfigurationTest {
     }
 
     @Test
-    void shouldAddCustomConverterAsFirst() {
+    void shouldAddCustomConverter() {
         var config = new RequestPayloadConverterConfiguration(mapper, payloadConverter);
-        var converters = new ArrayList<HttpMessageConverter<?>>(List.of(new MappingJackson2HttpMessageConverter(mapper)));
+        HttpMessageConverters.ServerBuilder builder = mock(HttpMessageConverters.ServerBuilder.class);
 
-        config.extendMessageConverters(converters);
+        config.configureMessageConverters(builder);
 
-        assertInstanceOf(
-                RequestPayloadJacksonConverter.class,
-                converters.getFirst(),
-                "Expected RequestPayloadJacksonConverter to be added first"
-        );
+        verify(builder).addCustomConverter(any(RequestPayloadJacksonConverter.class));
     }
 
     @Nested
@@ -142,7 +140,7 @@ class RequestConverterConfigurationTest {
             var type = testCase.type();
             var mediaType = testCase.mediaType();
 
-            boolean canRead = converter.canRead(type, null, mediaType);
+            boolean canRead = converter.canRead(ResolvableType.forType(type), mediaType);
 
             assertTrue(canRead, testCase.errorMessage());
         }
@@ -153,7 +151,7 @@ class RequestConverterConfigurationTest {
             var type = testCase.type();
             var mediaType = testCase.mediaType();
 
-            boolean canRead = converter.canRead(type, null, mediaType);
+            boolean canRead = converter.canRead(ResolvableType.forType(type), mediaType);
 
             assertFalse(canRead, testCase.errorMessage());
         }
@@ -161,10 +159,10 @@ class RequestConverterConfigurationTest {
         @ParameterizedTest
         @MethodSource
         void shouldDeferToSuper(TestCase testCase) {
-            var superConverter = new MappingJackson2HttpMessageConverter(mapper);
+            var superConverter = new JacksonJsonHttpMessageConverter(mapper);
 
-            boolean expected = superConverter.canRead(testCase.type(), null, testCase.mediaType());
-            boolean actual = converter.canRead(testCase.type(), null, testCase.mediaType());
+            boolean expected = superConverter.canRead(ResolvableType.forType(testCase.type()), testCase.mediaType());
+            boolean actual = converter.canRead(ResolvableType.forType(testCase.type()), testCase.mediaType());
 
             assertEquals(expected, actual, testCase.errorMessage());
         }
@@ -206,7 +204,7 @@ class RequestConverterConfigurationTest {
             // language=JSON
             var json = """
                     {"messageID":"mid-1"}""";
-            var payload = converter.read(RequestPayload.class, null, jsonMessage(json));
+            var payload = converter.read(ResolvableType.forClass(RequestPayload.class), jsonMessage(json), null);
 
             assertInstanceOf(RequestPayload.class, payload, "Expected payload to be deserialized as RequestPayload");
 
@@ -227,7 +225,7 @@ class RequestConverterConfigurationTest {
             // language=JSON
             var json = """
                     {"messageID":"mid-2"}""";
-            converter.read(RequestPayload.class, null, jsonMessage(json));
+            converter.read(ResolvableType.forClass(RequestPayload.class), jsonMessage(json), null);
 
             var context = RequestContextHolder.getContext();
 
@@ -246,7 +244,7 @@ class RequestConverterConfigurationTest {
             // language=JSON
             var json = """
                     "hello\"""";
-            var result = converter.read(String.class, null, jsonMessage(json));
+            var result = converter.read(ResolvableType.forClass(String.class), jsonMessage(json), null);
 
             var context = RequestContextHolder.getContext();
 

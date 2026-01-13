@@ -5,13 +5,13 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.5.9</version>
+        <version>4.0.1</version>
         <relativePath/>
     </parent>
 
     <groupId>ke.co.xently</groupId>
     <artifactId>header-validator-starter</artifactId>
-    <version>3.1.0</version>
+    <version>4.1.0</version>
     <name>Header validator starter</name>
     <description>Spring Boot autoconfiguration starters that validate incoming HTTP request headers for both Spring MVC (Servlet) and Spring WebFlux applications.</description>
     <url>https://github.com/xently/header-validator-starter</url>

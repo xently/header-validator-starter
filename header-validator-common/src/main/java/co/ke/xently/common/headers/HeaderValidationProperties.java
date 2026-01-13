@@ -4,7 +4,7 @@ import co.ke.xently.common.headers.validators.EpochTimestampValidator;
 import co.ke.xently.common.headers.validators.RegexValidator;
 import co.ke.xently.common.utils.ElapsedTimeManager;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 import java.util.HashSet;
 import java.util.Objects;
