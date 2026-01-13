@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>ke.co.xently</groupId>
+        <artifactId>header-validator-starter</artifactId>
+        <version>4.1.0</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+    <artifactId>report-aggregate</artifactId>
+    <name>report-aggregate</name>
+    <packaging>pom</packaging>
+
+    <properties>
+        <maven.deploy.skip>true</maven.deploy.skip>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>ke.co.xently</groupId>
+            <artifactId>header-validator-common</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>ke.co.xently</groupId>
+            <artifactId>header-validator-starter-web</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>ke.co.xently</groupId>
+            <artifactId>header-validator-starter-webflux</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>ke.co.xently</groupId>
+            <artifactId>demo-web</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>ke.co.xently</groupId>
+            <artifactId>demo-webflux</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.jetbrains.kotlinx</groupId>
+                <artifactId>kover-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>aggregate-report</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>report-xml</goal>
+                            <goal>report-html</goal>
+                            <goal>log</goal>
+                            <goal>verify</goal>
+                        </goals>
+                        <configuration>
+                            <aggregate>true</aggregate>
+                            <xmlFile>${maven.multiModuleProjectDirectory}/target/site/kover/report.xml</xmlFile>
+                            <outputDirectory>${maven.multiModuleProjectDirectory}/target/site/kover</outputDirectory>
+                            <rules>
+                                <rule>
+                                    <bounds>
+                                        <bound>
+                                            <minValue>90</minValue>
+                                        </bound>
+                                    </bounds>
+                                </rule>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>
