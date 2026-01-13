@@ -43,6 +43,7 @@
 
     <properties>
         <java.version>21</java.version>
+        <kover.version>0.9.4</kover.version>
         <!-- Set to false: The Parent POM must be published for children to be valid on Maven Central -->
         <maven.deploy.skip>false</maven.deploy.skip>
     </properties>
@@ -53,7 +54,35 @@
         <module>header-validator-common</module>
         <module>header-validator-starter-web</module>
         <module>header-validator-starter-webflux</module>
+        <module>report-aggregate</module>
     </modules>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.jetbrains.kotlinx</groupId>
+                    <artifactId>kover-maven-plugin</artifactId>
+                    <version>${kover.version}</version>
+                    <executions>
+                        <execution>
+                            <id>instr</id>
+                            <goals>
+                                <goal>instrumentation</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+
+        <plugins>
+            <plugin>
+                <groupId>org.jetbrains.kotlinx</groupId>
+                <artifactId>kover-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
 
     <profiles>
         <profile>
