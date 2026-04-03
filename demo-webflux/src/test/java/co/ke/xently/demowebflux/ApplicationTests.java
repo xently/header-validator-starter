@@ -83,9 +83,6 @@ class ApplicationTests {
                     .body("messageCode", equalTo("200"))
                     .body("messageDescription", equalTo("OK!"))
                     .body("messageID", nullValue())
-                    .body("errorInfo", emptyIterable())
-                    .body("additionalData", emptyIterable())
-                    .body("conversationID", not(blankOrNullString()))
                     .body("primaryData", is("Hello, World!"));
         }
 
@@ -99,8 +96,6 @@ class ApplicationTests {
                     .get("/api/hello")
                     .then()
                     .statusCode(HttpStatus.BAD_REQUEST.value())
-                    .body("statusCode", is("0"))
-                    .body("statusDescription", is("Failed"))
                     .body("messageCode", is("4000453"))
                     .body("errorInfo.errorCode", testCase.expectedErrorCodes());
         }
@@ -286,9 +281,6 @@ class ApplicationTests {
                         .body("messageCode", equalTo("200"))
                         .body("messageDescription", equalTo("OK!"))
                         .body("messageID", is("msg-123"))
-                        .body("errorInfo", emptyIterable())
-                        .body("additionalData", emptyIterable())
-                        .body("conversationID", not(blankOrNullString()))
                         .body("primaryData", is("""
                                 Hello, John Doe! You uploaded "greeting.txt"."""));
             }

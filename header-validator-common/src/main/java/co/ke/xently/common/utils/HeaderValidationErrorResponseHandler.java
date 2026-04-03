@@ -1,24 +1,17 @@
 package co.ke.xently.common.utils;
 
-import co.ke.xently.common.RequestContextHolder;
 import co.ke.xently.common.headers.exceptions.HeadersValidationException;
-import co.ke.xently.common.utils.converter.PayloadConverter;
 import co.ke.xently.common.utils.dto.ResponsePayload;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-import java.util.Collections;
-
 @Slf4j
 @AllArgsConstructor
 @Component
 public class HeaderValidationErrorResponseHandler {
-    private final PayloadConverter converter;
 
-    public Object handleHeadersValidationException(HeadersValidationException exception) {
-        var requestContext = RequestContextHolder.getContext();
-
+    public ResponsePayload handleHeadersValidationException(HeadersValidationException exception) {
         var errors = exception.getHeaderExceptions()
                 .stream()
                 .map(e -> {
@@ -32,16 +25,10 @@ public class HeaderValidationErrorResponseHandler {
                 })
                 .toList();
 
-        var response = ResponsePayload.builder()
-                .statusCode("0")
-                .statusDescription("Failed")
+        return ResponsePayload.builder()
                 .messageCode("4000453")
                 .messageDescription("Invalid or missing request headers")
                 .errorInfo(errors)
-                .messageID(requestContext.messageID())
-                .conversationID(requestContext.conversationID())
-                .additionalData(Collections.emptyList())
                 .build();
-        return converter.convertToHeaderValidationErrorResponse(response, exception);
     }
 }

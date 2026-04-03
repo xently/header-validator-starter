@@ -1,8 +1,5 @@
 package co.ke.xently.demowebflux;
 
-import co.ke.xently.common.RequestContextHolder;
-import co.ke.xently.common.utils.dto.Request;
-import co.ke.xently.common.utils.dto.ResponsePayload;
 import lombok.Builder;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -12,10 +9,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-
 @SpringBootApplication
 @RestController
 @RequestMapping("/api/hello")
@@ -24,13 +17,19 @@ public class Application {
     @Builder
     public record RequestPayload<T>(
             String messageID,
-            T primaryData,
-            List<ResponsePayload.AdditionalData> additionalData
-    ) implements Request {
-        @Override
-        public List<ResponsePayload.AdditionalData> additionalData() {
-            return Objects.requireNonNullElseGet(additionalData, Collections::emptyList);
-        }
+            T primaryData
+    ) {
+    }
+
+    @Builder
+    public record ResponsePayload<T>(
+            String statusCode,
+            String statusDescription,
+            String messageCode,
+            String messageDescription,
+            String messageID,
+            T primaryData
+    ) {
     }
 
     public static void main(String[] args) {
@@ -41,15 +40,12 @@ public class Application {
             ResponsePayload.ResponsePayloadBuilder<Response> response,
             RequestPayload<Request> request
     ) {
-        response.conversationID(RequestContextHolder.getContext().conversationID())
-                .messageCode("200")
+        response.messageCode("200")
                 .messageDescription("OK!")
                 .statusCode("0")
-                .statusDescription("Success")
-                .errorInfo(Collections.emptyList());
+                .statusDescription("Success");
         if (request != null) {
-            response.messageID(request.messageID())
-                    .additionalData(request.additionalData());
+            response.messageID(request.messageID());
         }
         return response.build();
     }

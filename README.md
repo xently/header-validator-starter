@@ -30,10 +30,7 @@ Modules in this repo are separate Maven projects:
 - Pluggable validation via `HeaderValidator` (functional interface). Built-ins include:
     - Regex-based validator for values like `X-MinorServiceVersion` and `X-CallBackURL`
     - Epoch timestamp validator for `X-TimeStamp`
-- Error handling: Invalid or missing headers are collected; a 400 Bad Request is returned with a standardised body
-  (fields such as `messageCode=4000453`, `statusDescription=Failed`, and one error per offending header).
-- Filters:
-    - `RequestContextFilter` creates a request-scoped context with a conversation ID.
+- Error handling: Invalid or missing headers are collected; a 400 Bad Request is returned with a standardised body.
 
 ## Requirements
 
@@ -213,55 +210,6 @@ You can provide validators by:
 - **FQCN:** set `validator=com.example.MyValidator` (class must have a public no-arg constructor), or
 - **Bean name:** declare `@Component class MyValidator implements HeaderValidator` and set `validator=MyValidator`.
 
-## Payload conversion and error response customisation
-
-The starters expose a simple extension point via the [
-`PayloadConverter`](header-validator-common/src/main/java/co/ke/xently/common/utils/converter/PayloadConverter.java)
-interface to help you:
-
-- Customise the body returned when header validation fails.
-- Convert the deserialized request-body into a "request payload" type that can carry a `messageID`.
-
-### Overriding the default behavior
-
-To override, define your own Spring bean of type `PayloadConverter` in your application. Because the default bean is
-created with `@ConditionalOnMissingBean`, your bean will take precedence automatically.
-
-Minimal example (works for both MVC and WebFlux apps):
-
-```java
-import co.ke.xently.common.headers.exceptions.HeadersValidationException;
-import co.ke.xently.common.utils.converter.PayloadConverter;
-import co.ke.xently.common.utils.dto.Request;
-import co.ke.xently.common.utils.dto.ResponsePayload;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.jspecify.annotations.NonNull;
-
-@Configuration
-class CustomPayloadConverterConfig {
-    @Bean
-    PayloadConverter payloadConverter() {
-        return new PayloadConverter() {
-            @Override
-            public @NonNull Object convertToRequestPayload(@NonNull Object payload) {
-                // Optionally map your DTO to Request so the starters can extract messageID.
-                // If payload is already a Request, just return it.
-                return payload; // replace with mapping logic if needed
-            }
-
-            @Override
-            public @NonNull Object convertToHeaderValidationErrorResponse(
-                    @NonNull ResponsePayload<?> defaultBody,
-                    @NonNull HeadersValidationException exception) {
-                // Optionally transform the default error payload into a custom structure.
-                return defaultBody; // or return your own DTO/map
-            }
-        };
-    }
-}
-```
-
 ## Default error response
 
 On validation failure header validation throws `HeadersValidationException`. The starter’s error handlers convert it
@@ -269,13 +217,8 @@ to a 400 response similar to:
 
 ```json
 {
-  "conversationID": "...",
-  "messageID": "...",
   "messageCode": "4000453",
   "messageDescription": "Invalid or missing request headers",
-  "statusCode": "0",
-  "statusDescription": "Failed",
-  "additionalData": [],
   "errorInfo": [
     {
       "errorCode": "<header-name>",
