@@ -9,6 +9,10 @@ on:
 jobs:
   build:
     runs-on: ubuntu-24.04
+    strategy:
+      matrix:
+        version: ['21', '25']
+        distribution: ['liberica', 'temurin', 'zulu', 'microsoft', 'corretto', 'oracle']
     permissions:
       contents: "write"
       pull-requests: "write"
@@ -16,11 +20,11 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - name: Set up JDK 21
+    - name: Set up JDK ${{ matrix.version }} - ${{ matrix.distribution }}
       uses: actions/setup-java@v4
       with:
-        java-version: '21'
-        distribution: 'liberica'
+        java-version: ${{ matrix.version }}
+        distribution: ${{ matrix.distribution }}
         cache: maven
         server-id: central-publish
         server-username: MAVEN_CENTRAL_USERNAME
