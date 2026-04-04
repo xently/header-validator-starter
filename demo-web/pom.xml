@@ -5,7 +5,7 @@
     <parent>
         <groupId>ke.co.xently</groupId>
         <artifactId>header-validator-starter</artifactId>
-        <version>3.1.0</version>
+        <version>4.1.0</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>demo-web</artifactId>
@@ -48,7 +48,7 @@
         <dependency>
             <groupId>io.rest-assured</groupId>
             <artifactId>rest-assured</artifactId>
-            <version>5.5.6</version>
+            <version>6.0.0</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

@@ -4,7 +4,7 @@ import co.ke.xently.common.headers.HeaderRule;
 import co.ke.xently.common.headers.validators.ValidationResult;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 
 @Getter
@@ -12,6 +12,5 @@ import org.springframework.lang.NonNull;
 public abstract sealed class HeaderException extends Exception permits MissingHeaderException, InvalidHeaderValueException {
     @NonNull
     private final HeaderRule rule;
-    @NonNull
-    private final ValidationResult.Failure failure;
+    private final ValidationResult.@NonNull Failure failure;
 }

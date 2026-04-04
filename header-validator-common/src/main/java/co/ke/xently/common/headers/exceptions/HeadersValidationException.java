@@ -2,7 +2,7 @@ package co.ke.xently.common.headers.exceptions;
 
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.server.ResponseStatusException;
 

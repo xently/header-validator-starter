@@ -6,13 +6,12 @@ import co.ke.xently.common.headers.exceptions.InvalidHeaderValueException;
 import co.ke.xently.common.headers.exceptions.MissingHeaderException;
 import co.ke.xently.common.headers.validators.ValidationResult;
 import co.ke.xently.common.utils.HeaderValidationErrorResponseHandler;
-import co.ke.xently.common.utils.converter.PayloadConverter;
-import org.junit.jupiter.api.AfterEach;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.autoconfigure.web.WebProperties;
 import org.springframework.boot.web.error.ErrorAttributeOptions;
-import org.springframework.boot.web.reactive.error.ErrorAttributes;
+import org.springframework.boot.webflux.error.ErrorAttributes;
 import org.springframework.context.support.StaticApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.codec.ServerCodecConfigurer;
@@ -28,22 +27,10 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class HeaderValidatorExceptionHandlerTest {
-    private final PayloadConverter payloadConverter = new PayloadConverter() {
-    };
-    @AfterEach
-    void tearDown() {
-        try {
-            RequestContextHolder.clear();
-        } catch (Exception ignored) {
-        }
-    }
-
     @Nested
     class getRoutingFunction {
         @Test
         void shouldRenderHeadersValidationExceptionViaRoutingFunction() {
-            RequestContextHolder.setContext(new RequestContext("conv-777", "msg-777"));
-
             var missingRule = HeaderRule.builder().headerName("X-Alpha").required(true).build();
             var invalidRule = HeaderRule.builder().headerName("X-Beta").required(true).build();
 
@@ -53,17 +40,18 @@ class HeaderValidatorExceptionHandlerTest {
 
             class StubErrorAttributes implements ErrorAttributes {
                 @Override
-                public Throwable getError(ServerRequest request) {
+                public Throwable getError(@NonNull ServerRequest request) {
                     return ex;
                 }
 
+                @NonNull
                 @Override
-                public Map<String, Object> getErrorAttributes(ServerRequest request, ErrorAttributeOptions options) {
+                public Map<String, Object> getErrorAttributes(@NonNull ServerRequest request, @NonNull ErrorAttributeOptions options) {
                     return Map.of();
                 }
 
                 @Override
-                public void storeErrorInformation(Throwable error, ServerWebExchange exchange) {
+                public void storeErrorInformation(@NonNull Throwable error, @NonNull ServerWebExchange exchange) {
                 }
             }
 
@@ -71,7 +59,7 @@ class HeaderValidatorExceptionHandlerTest {
             var properties = new WebProperties();
             var context = new StaticApplicationContext();
             var codecs = ServerCodecConfigurer.create();
-            var errorResponseHandler = new HeaderValidationErrorResponseHandler(payloadConverter);
+            var errorResponseHandler = new HeaderValidationErrorResponseHandler();
 
             var handler = new HeaderValidatorExceptionHandler(errorAttributes, properties, context, codecs, errorResponseHandler);
             var routes = handler.getRoutingFunction(errorAttributes);
@@ -92,17 +80,18 @@ class HeaderValidatorExceptionHandlerTest {
         void shouldPropagateNonHeadersExceptionsViaRoutingFunction() {
             class StubErrorAttributes implements ErrorAttributes {
                 @Override
-                public Throwable getError(ServerRequest request) {
+                public Throwable getError(@NonNull ServerRequest request) {
                     return new RuntimeException("boom");
                 }
 
+                @NonNull
                 @Override
-                public Map<String, Object> getErrorAttributes(ServerRequest request, ErrorAttributeOptions options) {
+                public Map<String, Object> getErrorAttributes(@NonNull ServerRequest request, @NonNull ErrorAttributeOptions options) {
                     return Map.of();
                 }
 
                 @Override
-                public void storeErrorInformation(Throwable error, ServerWebExchange exchange) {
+                public void storeErrorInformation(@NonNull Throwable error, @NonNull ServerWebExchange exchange) {
                 }
             }
 
@@ -110,7 +99,7 @@ class HeaderValidatorExceptionHandlerTest {
             var properties = new WebProperties();
             var context = new StaticApplicationContext();
             var codecs = ServerCodecConfigurer.create();
-            var errorResponseHandler = new HeaderValidationErrorResponseHandler(payloadConverter);
+            var errorResponseHandler = new HeaderValidationErrorResponseHandler();
 
             var handler = new HeaderValidatorExceptionHandler(errorAttributes, properties, context, codecs, errorResponseHandler);
             var routes = handler.getRoutingFunction(errorAttributes);

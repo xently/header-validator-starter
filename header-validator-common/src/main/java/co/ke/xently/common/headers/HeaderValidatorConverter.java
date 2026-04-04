@@ -8,7 +8,7 @@ import org.springframework.beans.BeansException;
 import org.springframework.boot.context.properties.ConfigurationPropertiesBinding;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.convert.converter.Converter;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.InvocationTargetException;
