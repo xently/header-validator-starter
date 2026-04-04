@@ -13,7 +13,7 @@
     <description>header-validator-starter-webflux</description>
     <dependencies>
         <dependency>
-            <groupId>ke.co.xently</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>header-validator-common</artifactId>
             <version>${project.version}</version>
         </dependency>

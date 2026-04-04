@@ -16,7 +16,7 @@
     </properties>
     <dependencies>
         <dependency>
-            <groupId>ke.co.xently</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>header-validator-starter-webflux</artifactId>
             <version>${project.version}</version>
         </dependency>

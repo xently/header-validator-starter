@@ -18,27 +18,27 @@
 
     <dependencies>
         <dependency>
-            <groupId>ke.co.xently</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>header-validator-common</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>ke.co.xently</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>header-validator-starter-web</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>ke.co.xently</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>header-validator-starter-webflux</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>ke.co.xently</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>demo-web</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>ke.co.xently</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>demo-webflux</artifactId>
             <version>${project.version}</version>
         </dependency>
