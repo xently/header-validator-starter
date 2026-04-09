@@ -1,5 +1,9 @@
 # Header Validator Starter
 
+![Maven Central Version](https://img.shields.io/maven-central/v/ke.co.xently/header-validator-starter)
+[![Java CI with Maven](https://github.com/xently/header-validator-starter/actions/workflows/maven.yml/badge.svg)](https://github.com/xently/header-validator-starter/actions/workflows/maven.yml)
+[![Maven Central Publish](https://github.com/xently/header-validator-starter/actions/workflows/maven-publish.yml/badge.svg)](https://github.com/xently/header-validator-starter/actions/workflows/maven-publish.yml)
+
 ## Overview
 
 This repository contains Spring Boot autoconfiguration starters that validate incoming HTTP request headers for both
