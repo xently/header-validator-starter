@@ -112,15 +112,15 @@ Modules in this repo are separate Maven projects:
 
 Both starters expose the following configuration properties (Spring Boot relaxed binding applies):
 
-- `xently.api.headers.validation.headers` — a list of header rules. Each rule supports:
+- `settings.headers.validation.headers` — a list of header rules. Each rule supports:
     - `header-name` (string, required): The HTTP header name.
     - `required` (boolean, default true): Whether the header must be present and non-empty.
     - `validator` (string, optional): A `HeaderValidator` implementation. The value can be:
         - a fully qualified class name (FQCN) with a public no-arg constructor, or
         - a Spring bean name of a `HeaderValidator`.
-          The lookup order is controlled by `xently.api.headers.validator.source` (see below).
+          The lookup order is controlled by `settings.headers.validator.source` (see below).
 
-- `xently.api.headers.validator.source` — optional, enum controlling how validator strings are resolved:
+- `settings.headers.validator.source` — optional, enum controlling how validator strings are resolved:
     - `FQCN` — use FQCN only
     - `BeanDefinition` — use Spring bean name only
     - `FQCNB4BeanDefinition` — try FQCN, then fall back to bean name (default)
@@ -179,26 +179,26 @@ xently:
 #### Properties
 
 ```properties
-xently.api.headers.validator.source=beandefinitionb4fqcn
-xently.api.headers.validation.headers.[0].header-name=X-Additional-Required
-xently.api.headers.validation.headers.[1].header-name=X-Additional-Optional
-xently.api.headers.validation.headers.[1].required=false
-xently.api.headers.validation.headers.[2].header-name=X-Additional-Custom-Validator
-xently.api.headers.validation.headers.[2].required=false
+settings.headers.validator.source=beandefinitionb4fqcn
+settings.headers.validation.headers.[0].header-name=X-Additional-Required
+settings.headers.validation.headers.[1].header-name=X-Additional-Optional
+settings.headers.validation.headers.[1].required=false
+settings.headers.validation.headers.[2].header-name=X-Additional-Custom-Validator
+settings.headers.validation.headers.[2].required=false
 # Spring bean name
-xently.api.headers.validation.headers.[2].validator=CustomValidator
+settings.headers.validation.headers.[2].validator=CustomValidator
 # Override the default X-TimeStamp header to accept ISO-8601 instead
-xently.api.headers.validation.headers.[3].header-name=X-Timestamp
-xently.api.headers.validation.headers.[3].required=false
-xently.api.headers.validation.headers.[3].validator=validators.co.ke.xently.demoweb.ISO8601TimestampHeaderValidator
+settings.headers.validation.headers.[3].header-name=X-Timestamp
+settings.headers.validation.headers.[3].required=false
+settings.headers.validation.headers.[3].validator=validators.co.ke.xently.demoweb.ISO8601TimestampHeaderValidator
 ```
 
 #### Environment variables
 
 All properties can be supplied via environment variables using Spring Boot’s relaxed binding rules. Examples:
 
-- `xently.api.headers.validator.source` → `XENTLY_API_HEADERS_VALIDATION_VALIDATOR_SOURCE`
-- `xently.api.headers.validation.headers.[0].header-name` → `XENTLY_API_HEADERS_VALIDATION_HEADERS_0__HEADER_NAME`
+- `settings.headers.validator.source` → `XENTLY_API_HEADERS_VALIDATION_VALIDATOR_SOURCE`
+- `settings.headers.validation.headers.[0].header-name` → `XENTLY_API_HEADERS_VALIDATION_HEADERS_0__HEADER_NAME`
 
 Note the conversion rules: dots to underscores, list indexes like `[0]` to `_0_` (often written as `0__` to separate
 levels), and kebab-case keys to upper snake case.

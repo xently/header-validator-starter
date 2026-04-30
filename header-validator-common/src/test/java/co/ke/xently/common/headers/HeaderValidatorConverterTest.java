@@ -128,7 +128,7 @@ class HeaderValidatorConverterTest {
                 .thenReturn(environment);
         when(
                 environment.getProperty(
-                        "xently.api.headers.validator.source",
+                        "settings.headers.validator.source",
                         HeaderValidatorSource.class,
                         HeaderValidatorSource.FQCNB4BeanDefinition
                 )
@@ -155,7 +155,7 @@ class HeaderValidatorConverterTest {
                 .thenReturn(environment);
         when(
                 environment.getProperty(
-                        "xently.api.headers.validator.source",
+                        "settings.headers.validator.source",
                         HeaderValidatorSource.class,
                         HeaderValidatorSource.FQCNB4BeanDefinition
                 )

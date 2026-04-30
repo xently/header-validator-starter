@@ -1,7 +1,7 @@
 {
   "properties": [
     {
-      "name": "xently.api.headers.validator.source",
+      "name": "settings.headers.validator.source",
       "type": "co.ke.xently.common.headers.HeaderValidatorSource",
       "description": "Flag to determine the order of header validator lookup strategies. Defaults to `FQCNB4BeanDefinition`."
     }

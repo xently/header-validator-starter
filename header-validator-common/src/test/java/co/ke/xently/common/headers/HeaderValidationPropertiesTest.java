@@ -70,9 +70,9 @@ class HeaderValidationPropertiesTest {
         @Test
         void shouldBindPropertiesCorrectly() {
             runner.withPropertyValues(
-                    "xently.api.headers.validation.headers.[0].header-name=X-Custom-Header",
-                    "xently.api.headers.validation.headers.[0].required=true",
-                    "xently.api.headers.validation.headers.[0].validator=co.ke.xently.common.headers.validators.EpochTimestampValidator"
+                    "settings.headers.validation.headers.[0].header-name=X-Custom-Header",
+                    "settings.headers.validation.headers.[0].required=true",
+                    "settings.headers.validation.headers.[0].validator=co.ke.xently.common.headers.validators.EpochTimestampValidator"
             ).run(context -> {
                 assertThat(context)
                         .hasSingleBean(HeaderValidationProperties.class);
@@ -98,7 +98,7 @@ class HeaderValidationPropertiesTest {
         @ParameterizedTest
         @MethodSource
         void shouldDefaultToRequiredAndDefaultValidator(TestCase testCase) {
-            runner.withPropertyValues("xently.api.headers.validation.headers.[0].header-name=X-Custom-Header").run(context -> {
+            runner.withPropertyValues("settings.headers.validation.headers.[0].header-name=X-Custom-Header").run(context -> {
                 assertThat(context)
                         .hasSingleBean(HeaderValidationProperties.class);
 

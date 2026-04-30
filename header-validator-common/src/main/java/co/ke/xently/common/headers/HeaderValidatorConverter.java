@@ -24,7 +24,7 @@ class HeaderValidatorConverter implements Converter<String, HeaderValidator> {
     @Override
     public HeaderValidator convert(@NonNull String source) {
         var headerValidatorSource = context.getEnvironment().getProperty(
-                "xently.api.headers.validator.source",
+                "settings.headers.validator.source",
                 HeaderValidatorSource.class,
                 HeaderValidatorSource.FQCNB4BeanDefinition
         );

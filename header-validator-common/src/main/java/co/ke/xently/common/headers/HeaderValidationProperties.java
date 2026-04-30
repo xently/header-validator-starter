@@ -11,7 +11,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-@ConfigurationProperties(prefix = "xently.api.headers.validation")
+@ConfigurationProperties(prefix = "settings.headers.validation")
 public record HeaderValidationProperties(Set<HeaderRule> headers) {
     private static final Set<HeaderRule> DEFAULT_HEADERS = Set.of(
             HeaderRule.builder().headerName("X-FeatureCode")
