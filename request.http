@@ -20,6 +20,9 @@ X-CallBackURL: {{callbackUrl}} # [optional] - default configuration
 X-Additional-Required: v # uses default validator; should be non-blank
 X-Additional-Optional: x # uses default validator; should be non-blank
 X-Additional-Custom-Validator: X-Additional-Custom-Validator
+X-Custom-Allowed-Values: Z
+
+>>! {{$historyFolder}}/hello.json
 
 ###
 # group: Header validator test
@@ -42,6 +45,7 @@ X-CallBackURL: {{callbackUrl}} # [optional] - default configuration
 X-Additional-Required: v # uses default validator; should be non-blank
 X-Additional-Optional: x # uses default validator; should be non-blank
 X-Additional-Custom-Validator: X-Additional-Custom-Validator
+X-Custom-Allowed-Values: Z
 Content-Type: application/json
 
 {
@@ -54,6 +58,8 @@ Content-Type: application/json
     }
   ]
 }
+
+>>! {{$historyFolder}}/hello-post.json
 
 ###
 # group: Header validator test
@@ -76,6 +82,7 @@ X-CallBackURL: {{callbackUrl}} # [optional] - default configuration
 X-Additional-Required: v # uses default validator; should be non-blank
 X-Additional-Optional: x # uses default validator; should be non-blank
 X-Additional-Custom-Validator: X-Additional-Custom-Validator
+X-Custom-Allowed-Values: Z
 Content-Type: multipart/form-data; boundary=WebAppBoundary
 
 --WebAppBoundary
@@ -97,3 +104,5 @@ Content-Disposition: form-data; name="file"; filename="README.md"
 
 < ./README.md
 --WebAppBoundary
+
+>>! {{$historyFolder}}/hello-post-multipart.json

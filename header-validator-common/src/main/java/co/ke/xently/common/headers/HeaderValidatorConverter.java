@@ -1,14 +1,14 @@
 package co.ke.xently.common.headers;
 
-import co.ke.xently.common.headers.validators.DefaultHeaderValidator;
 import co.ke.xently.common.headers.validators.HeaderValidator;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import org.springframework.beans.BeansException;
 import org.springframework.boot.context.properties.ConfigurationPropertiesBinding;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.convert.converter.Converter;
-import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.InvocationTargetException;
@@ -39,14 +39,14 @@ class HeaderValidatorConverter implements Converter<String, HeaderValidator> {
         };
     }
 
-    private HeaderValidator getHeaderValidatorFromBeanDefinition(String source) {
+    private @Nullable HeaderValidator getHeaderValidatorFromBeanDefinition(String source) {
         return getHeaderValidatorFromBeanDefinition(source, e -> {
             log.error("Bean definition retrieval failed for instance of type '{}' from '{}'.", HeaderValidator.class.getName(), source, e);
-            return new DefaultHeaderValidator();
+            return null;
         });
     }
 
-    private HeaderValidator getHeaderValidatorFromBeanDefinition(String source, Function<Exception, HeaderValidator> fallback) {
+    private @Nullable HeaderValidator getHeaderValidatorFromBeanDefinition(String source, Function<Exception, HeaderValidator> fallback) {
         try {
             return context.getBean(source, HeaderValidator.class);
         } catch (BeansException e) {
@@ -54,14 +54,14 @@ class HeaderValidatorConverter implements Converter<String, HeaderValidator> {
         }
     }
 
-    private static HeaderValidator getHeaderValidatorFromFQCN(String source) {
+    private @Nullable HeaderValidator getHeaderValidatorFromFQCN(String source) {
         return getHeaderValidatorFromFQCN(source, e -> {
             log.error("Failed to create an instance of '{}' from '{}'.", HeaderValidator.class.getName(), source, e);
-            return new DefaultHeaderValidator();
+            return null;
         });
     }
 
-    private static HeaderValidator getHeaderValidatorFromFQCN(String source, Function<Exception, HeaderValidator> fallback) {
+    private static @Nullable HeaderValidator getHeaderValidatorFromFQCN(String source, Function<Exception, HeaderValidator> fallback) {
         try {
             return (HeaderValidator) Class.forName(source)
                     .getDeclaredConstructor()

@@ -4,10 +4,10 @@ import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.read.ListAppender;
-import co.ke.xently.common.headers.validators.DefaultHeaderValidator;
 import co.ke.xently.common.headers.validators.EpochTimestampValidator;
 import co.ke.xently.common.headers.validators.HeaderValidator;
 import co.ke.xently.common.headers.validators.ValidationResult;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -16,7 +16,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
-import org.jspecify.annotations.NonNull;
 
 import java.util.stream.Stream;
 
@@ -175,7 +174,7 @@ class HeaderValidatorConverterTest {
 
         assertAll(
                 () -> assertThat(actual)
-                        .isInstanceOf(DefaultHeaderValidator.class),
+                        .isNull(),
                 () -> assertThat(errorLogMessages)
                         .containsOnly("%s '%s' from '%s'." .formatted(testCase.expectedErrorMessagePrefix(), HeaderValidator.class.getName(), testCase.className()))
         );

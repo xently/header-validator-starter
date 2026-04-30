@@ -51,6 +51,7 @@ class ApplicationTests {
                 new Header("X-ChannelCode", "10"),
                 new Header("X-ChannelName", "App"),
                 new Header("X-Additional-Required", "X-Additional-Required"),
+                new Header("X-Custom-Allowed-Values", new String[]{"x", "y", "z"}[new Random().nextInt(3)]),
                 new Header("X-Timestamp", Instant.now().atZone(ZoneId.of("UTC")).format(DateTimeFormatter.ISO_INSTANT))
         );
     }
@@ -70,6 +71,7 @@ class ApplicationTests {
                             new Header("X-ChannelCode", "10"),
                             new Header("X-ChannelName", "App"),
                             new Header("X-Additional-Required", "X-Additional-Required"),
+                            new Header("X-Custom-Allowed-Values", new String[]{"x", "y", "z"}[new Random().nextInt(3)]),
                             new Header("X-Timestamp", Instant.now().atZone(ZoneId.of("UTC")).format(DateTimeFormatter.ISO_INSTANT))
                     )
             );
@@ -104,7 +106,8 @@ class ApplicationTests {
             List<Header> headers = new ArrayList<>(
                     List.of(
                             new Header("X-MinorServiceVersion", "v1.0"),
-                            new Header("X-Additional-Required", "value")
+                            new Header("X-Additional-Required", "value"),
+                            new Header("X-Custom-Allowed-Values", new String[]{"x", "y", "z"}[new Random().nextInt(3)])
                     )
             );
             Set.of(
@@ -120,8 +123,7 @@ class ApplicationTests {
                     "X-ServiceMode",
                     "X-SubscriberEvents"
             ).forEach(h -> headers.add(new Header(h, "  ")));
-            return Stream.of(
-                    new TestCase(
+            return Stream.of(new TestCase(
                             List.of(),
                             containsInAnyOrder(
                                     "X-FeatureName",
@@ -131,7 +133,8 @@ class ApplicationTests {
                                     "X-ChannelCode",
                                     "X-ChannelName",
                                     "X-ChannelCategory",
-                                    "X-Additional-Required"
+                                    "X-Additional-Required",
+                                    "X-Custom-Allowed-Values"
                             )
                     ),
                     new TestCase(
@@ -160,9 +163,10 @@ class ApplicationTests {
                                     new Header("X-ChannelCode", "10"),
                                     new Header("X-ChannelName", "App"),
                                     new Header("X-CallBackURL", "invalid"),
-                                    new Header("X-Additional-Required", "       ")
+                                    new Header("X-Additional-Required", "       "),
+                                    new Header("X-Custom-Allowed-Values", "invalid")
                             ),
-                            containsInAnyOrder("X-CallBackURL", "X-Additional-Required")
+                            containsInAnyOrder("X-CallBackURL", "X-Additional-Required", "X-Custom-Allowed-Values")
                     ),
                     new TestCase(
                             List.of(
@@ -174,7 +178,8 @@ class ApplicationTests {
                                     new Header("X-ChannelCode", "10"),
                                     new Header("X-ChannelName", "App"),
                                     new Header("X-Additional-Required", "value"),
-                                    new Header("X-Additional-Optional", "  ")
+                                    new Header("X-Additional-Optional", "  "),
+                                    new Header("X-Custom-Allowed-Values", new String[]{"x", "y", "z"}[new Random().nextInt(3)])
                             ),
                             containsInAnyOrder("X-Additional-Optional")
                     ),
@@ -188,7 +193,8 @@ class ApplicationTests {
                                     new Header("X-ChannelCode", "10"),
                                     new Header("X-ChannelName", "App"),
                                     new Header("X-Additional-Required", "value"),
-                                    new Header("X-Additional-Custom-Validator", "  ")
+                                    new Header("X-Additional-Custom-Validator", "  "),
+                                    new Header("X-Custom-Allowed-Values", new String[]{"x", "y", "z"}[new Random().nextInt(3)])
                             ),
                             containsInAnyOrder("X-Additional-Custom-Validator")
                     ),
@@ -203,7 +209,8 @@ class ApplicationTests {
                                     new Header("X-ChannelName", "App"),
                                     new Header("X-Additional-Required", "value"),
                                     new Header("X-Additional-Custom-Validator", "invalid"),
-                                    new Header("X-Timestamp", String.valueOf(System.currentTimeMillis()))
+                                    new Header("X-Timestamp", String.valueOf(System.currentTimeMillis())),
+                                    new Header("X-Custom-Allowed-Values", new String[]{"x", "y", "z"}[new Random().nextInt(3)])
                             ),
                             containsInAnyOrder("X-Additional-Custom-Validator", "X-Timestamp")
                     )

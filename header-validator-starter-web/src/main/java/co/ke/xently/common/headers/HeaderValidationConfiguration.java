@@ -1,19 +1,18 @@
 package co.ke.xently.common.headers;
 
-import co.ke.xently.common.headers.validators.DefaultHeaderValidator;
 import co.ke.xently.common.headers.validators.EpochTimestampValidator;
 import lombok.RequiredArgsConstructor;
+import org.jspecify.annotations.NonNull;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Import;
-import org.jspecify.annotations.NonNull;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @RequiredArgsConstructor
 @AutoConfiguration
 @EnableConfigurationProperties(HeaderValidationProperties.class)
-@Import({HeaderValidatorConverter.class, DefaultHeaderValidator.class, EpochTimestampValidator.class})
+@Import({HeaderValidatorConverter.class, EpochTimestampValidator.class})
 class HeaderValidationConfiguration implements WebMvcConfigurer {
     private final HeaderValidationProperties properties;
 

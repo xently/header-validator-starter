@@ -1,24 +1,56 @@
 package co.ke.xently.common.headers;
 
+import co.ke.xently.common.headers.validators.DefaultHeaderValidator;
 import co.ke.xently.common.headers.validators.ValidationResult;
 import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.function.Executable;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import java.util.Set;
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 
 class HeaderRuleTest {
+    static Stream<Executable> shouldThrowExceptionForMutuallyExclusiveProperties() {
+        return Stream.of(
+                () -> {
+                    var rule = new HeaderRule();
+                    rule.setAllowedValues(Set.of("Example"));
+                    rule.setValidator(new DefaultHeaderValidator());
+                },
+                () -> {
+                    var rule = new HeaderRule();
+                    rule.setValidator(new DefaultHeaderValidator());
+                    rule.setAllowedValues(Set.of("Example"));
+                }
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource
+    void shouldThrowExceptionForMutuallyExclusiveProperties(Executable executable) {
+        var actual = assertThrows(IllegalArgumentException.class, executable);
+
+        assertThat(actual.getMessage())
+                .startsWith("Cannot have both a `validator` and `allowedValues` set.");
+    }
+
     @Nested
     class isValid {
         static Stream<TestCase> shouldValidateRequired() {
             return Stream.of(
                     new TestCase("", ValidationResult.Failure.class),
                     new TestCase(" ", ValidationResult.Failure.class),
-                    new TestCase("e", ValidationResult.Success.class),
-                    new TestCase(" e ", ValidationResult.Success.class)
+                    new TestCase("e", ValidationResult.Failure.class),
+                    new TestCase(" e ", ValidationResult.Failure.class),
+                    new TestCase("Expected", ValidationResult.Success.class),
+                    new TestCase("expectEd", ValidationResult.Success.class),
+                    new TestCase("Expected  ", ValidationResult.Success.class),
+                    new TestCase("alter native", ValidationResult.Failure.class),
+                    new TestCase("alternative", ValidationResult.Success.class)
             );
         }
 
@@ -26,15 +58,23 @@ class HeaderRuleTest {
             return Stream.of(
                     new TestCase("", ValidationResult.Failure.class),
                     new TestCase(" ", ValidationResult.Failure.class),
-                    new TestCase("e", ValidationResult.Success.class),
-                    new TestCase(" e ", ValidationResult.Success.class)
+                    new TestCase("e", ValidationResult.Failure.class),
+                    new TestCase(" e ", ValidationResult.Failure.class),
+                    new TestCase("Expected", ValidationResult.Success.class),
+                    new TestCase("expectEd", ValidationResult.Success.class),
+                    new TestCase("Expected  ", ValidationResult.Success.class),
+                    new TestCase("alter native", ValidationResult.Failure.class),
+                    new TestCase("alternative", ValidationResult.Success.class)
             );
         }
 
         @ParameterizedTest
         @MethodSource
         void shouldValidateRequired(TestCase testCase) {
-            var rule = new HeaderRule();
+            var rule = HeaderRule.builder()
+                    .headerName("X-Header-Name")
+                    .allowedValues(Set.of("Expected", "Alternative"))
+                    .build();
 
             var actual = rule.validate(testCase.headerValue());
 
@@ -46,6 +86,7 @@ class HeaderRuleTest {
         void shouldValidateOptional(TestCase testCase) {
             var rule = HeaderRule.builder()
                     .headerName("X-Header-Name")
+                    .allowedValues(Set.of("Expected", "Alternative"))
                     .required(false)
                     .build();
 
