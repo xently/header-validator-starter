@@ -1,22 +1,6 @@
 {
   "properties": [
     {
-      "name": "xently.api.headers.validation.headers.[].header-name",
-      "type": "java.lang.String",
-      "description": "HTTP header name."
-    },
-    {
-      "name": "xently.api.headers.validation.headers.[].required",
-      "type": "java.lang.Boolean",
-      "defaultValue": true,
-      "description": "Whether the header must be present and non-empty."
-    },
-    {
-      "name": "xently.api.headers.validation.headers.[].validator",
-      "type": "java.lang.String",
-      "description": "HeaderValidator FQCN or bean name."
-    },
-    {
       "name": "xently.api.headers.validator.source",
       "type": "co.ke.xently.common.headers.HeaderValidatorSource",
       "description": "Flag to determine the order of header validator lookup strategies. Defaults to `FQCNB4BeanDefinition`."
